@@ -17,6 +17,7 @@ const jwt = require('jsonwebtoken');
       };
 
       exports.login = (req, res, next) => {
+        console.log('login');
         User.findOne({ email: req.body.email })
             .then(user => {
                 if (!user) {

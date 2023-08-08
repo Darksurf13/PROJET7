@@ -46,8 +46,9 @@ exports.getOneBook = (req, res, next) => {
 // La fonction de cette route est de renvoyer un tableau des 3 livres de la base de données ayant la meilleure note moyenne.
 // Le contrôleur utilise le modèle Book pour effectuer une agrégation sur la collection de livres dans la base de données en utilisant la méthode aggregate() de Mongoose. 
 // L’agrégation décompose les tableaux de notes de chaque livre en documents distincts avec l’opérateur $unwind, calcule la note moyenne pour chaque livre avec l’opérateur $group, trie les livres par note moyenne décroissante avec l’opérateur $sort et limite le nombre de résultats à 3 avec l’opérateur $limit. 
-// Si l’agrégation réussit, un tableau des 3 livres ayant la meilleure note moyenne est renvoyé avec un code de statut 200. Si une erreur se produit, un objet d’erreur est renvoyé avec un code de statut 400
-exports.getBestRatingBooks = (req, res, next) => {
+// Si l’agrégation réussit, un tableau des 3 livres ayant la meilleure note moyenne est renvoyé avec un code de statut 200. 
+// Si une erreur se produit, un objet d’erreur est renvoyé avec un code de statut 400
+exports.getBestRatingBooks  = (req, res, next) => {
   Book.aggregate([
     { $unwind: "$ratings" },
     { $group: { _id: "$_id", avgRating: { $avg: "$ratings.grade" } } },
@@ -111,7 +112,8 @@ exports.deleteBook = (req, res, next) => {
 };
 
 // La route utilise la méthode POST et le point de terminaison /api/books/:id/rating. 
-//Il nécessite une authentification. La fonction de contrôleur rateBook vérifie si la note fournie est comprise entre 0 et 5, puis vérifie si l'utilisateur a déjà noté le livre. 
+// Il nécessite une authentification. 
+// La fonction de contrôleur rateBook vérifie si la note fournie est comprise entre 0 et 5, puis vérifie si l'utilisateur a déjà noté le livre. 
 //Si ce n'est pas le cas, il ajoute la note de l'utilisateur au tableau des notes du livre, met à jour la note moyenne du livre et enregistre les modifications dans la base de données.
 exports.rateBook = (req, res, next) => {
   const userId = req.body.userId;
@@ -125,7 +127,7 @@ exports.rateBook = (req, res, next) => {
       if (existingRating) {
         return res.status(400).json({ error: 'User has already rated this book' });
       }
-      book.ratings.push({ userId, rating });
+      book.ratings.push({ userId, grade: rating });
       const totalRatings = book.ratings.length;
       const sumRatings = book.ratings.reduce((acc, curr) => acc + curr.rating, 0);
       book.averageRating = sumRatings / totalRatings;

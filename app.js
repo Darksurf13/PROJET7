@@ -1,6 +1,7 @@
 const express = require('express');
 //const bodyParser = require ('body-parser')   // donne aussi acces au corps de la requete en méthode POST
 const mongoose = require('mongoose');
+const cors=require('cors');
 const app = express();
 // enregistrement du nouveau routeur de stuFf.js de ROUTE
 const stuffRoutes = require('./routes/stuff');
@@ -9,9 +10,9 @@ const userRoutes = require('./routes/user');
 const path = require('path');
 
 //pour éviter l'erreur cannot GET / sur localhost:4000
-app.get('/', (req, res) => {
-  res.send('Bienvenue sur mon application Express!');
-});
+//app.get('/', (req, res) => {
+//  res.send('Bienvenue sur mon application Express!');
+//});
 
 // Connexion à la base de données
 mongoose.connect('mongodb+srv://ELO13:KolDB13@p7-dev-web-livres.d6llbj5.mongodb.net/?retryWrites=true&w=majority',
@@ -22,7 +23,9 @@ mongoose.connect('mongodb+srv://ELO13:KolDB13@p7-dev-web-livres.d6llbj5.mongodb.
 
 //pour une route POST : pour accéder au corps de la requete
 app.use(express.json());
-
+app.use(cors({
+  origin:'http://localhost:3000'
+}))
 // pour l'erreur de CORS
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -34,9 +37,9 @@ app.use((req, res, next) => {
 //app.use(bodyParser.json());
 
 // enregistre toutes les routes en 1 seule route
-app.use('/api/stuff', stuffRoutes);
-app.use(userRoutes);
-//app.use('/api/auth/login', userRoutes);
+app.use('/api/books', stuffRoutes);
+app.use('/api/auth',userRoutes);
+//app.use('userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 
