@@ -1,7 +1,7 @@
 const express = require('express');
 //const bodyParser = require ('body-parser')   // donne aussi acces au corps de la requete en méthode POST
 const mongoose = require('mongoose');
-const cors=require('cors');
+const cors = require('cors');
 const app = express();
 // enregistrement du nouveau routeur de stuFf.js de ROUTE
 const stuffRoutes = require('./routes/stuff');
