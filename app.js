@@ -4,13 +4,16 @@ const helmet = require("helmet");
 const path = require("path");
 const stuffRoutes = require("./routes/stuff");
 const userRoutes = require("./routes/user");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 
 // Connexion à la base de données
 mongoose
   .connect(
-    "mongodb+srv://ELO13:KolDB13@p7-dev-web-livres.d6llbj5.mongodb.net/?retryWrites=true&w=majority",
+    process.env.MONGO_URI,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
